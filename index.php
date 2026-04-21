@@ -93,6 +93,9 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                 <p class="subtitle">Kraftraum</p>
             </div>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button id="manualAddModeBtn" class="statistik-btn manual-mode-btn" type="button" onclick="toggleManualAddMode()">
+                    Nachtragen-Modus: AUS
+                </button>
                 <a href="gruppen.php" class="statistik-btn" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">Gruppen</a>
                 <a href="statistik.php" class="statistik-btn">Statistik</a>
                 <a href="admin_login.php" class="statistik-btn" style="background: linear-gradient(135deg, #404040 0%, #2d2d2d 100%);">Admin</a>
