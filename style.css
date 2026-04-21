@@ -77,10 +77,26 @@ header {
     letter-spacing: 1px;
 }
 
+.manual-mode-btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.manual-mode-btn.manual-mode-active {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.4);
+}
+
 .statistik-btn:hover {
     background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+}
+
+.manual-mode-btn.manual-mode-active:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.6);
 }
 
 .cards-grid {
@@ -136,6 +152,13 @@ header {
     margin-bottom: 10px;
     font-weight: 700;
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+body.manual-add-mode .person-card .person-name {
+    color: #facc15;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    cursor: pointer;
 }
 
 .status-indicator {
@@ -336,7 +359,8 @@ header {
     transform: translateY(-2px);
 }
 
-#newPersonName {
+#newPersonName,
+#renamePersonName {
     width: 100%;
     padding: 18px;
     font-size: 1.2em;
@@ -349,12 +373,14 @@ header {
     transition: border-color 0.3s ease;
 }
 
-#newPersonName:focus {
+#newPersonName:focus,
+#renamePersonName:focus {
     border-color: #16a34a;
     background: #252525;
 }
 
-#newPersonName::placeholder {
+#newPersonName::placeholder,
+#renamePersonName::placeholder {
     color: #666;
 }
 

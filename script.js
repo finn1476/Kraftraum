@@ -1,6 +1,7 @@
 let activeSessions = {}; // {personId: {startTime, intervalId, sessionId, card}}
 let inactivityTimer = null;
 let hasActiveSession = false;
+let manualAddModeEnabled = false;
 const INACTIVITY_TIMEOUT = 15000; // 15 Sekunden
 const RELOAD_FLAG_KEY = 'gym_tracking_reload_triggered';
 
@@ -126,65 +127,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Long-Press Handler für nachträgliches Eintragen
+    // Klick auf Namen für Nachtragen-Modus
     const personNames = document.querySelectorAll('.person-name');
     personNames.forEach(nameElement => {
-        let touchTimer = null;
-        const LONG_PRESS_DURATION = 500;
-        
-        // Touch Events
-        nameElement.addEventListener('touchstart', function(e) {
-            touchTimer = setTimeout(() => {
-                const card = nameElement.closest('.person-card');
-                if (card) {
-                    const personId = card.dataset.personId;
-                    const personName = card.dataset.personName;
-                    openManualAddModal(personId, personName);
-                }
-            }, LONG_PRESS_DURATION);
-        }, { passive: true });
-        
-        nameElement.addEventListener('touchend', function(e) {
-            if (touchTimer) {
-                clearTimeout(touchTimer);
-                touchTimer = null;
-            }
-        }, { passive: true });
-        
-        nameElement.addEventListener('touchcancel', function(e) {
-            if (touchTimer) {
-                clearTimeout(touchTimer);
-                touchTimer = null;
-            }
-        }, { passive: true });
-        
-        // Mouse Events für Desktop
-        let mouseTimer = null;
-        nameElement.addEventListener('mousedown', function(e) {
-            mouseTimer = setTimeout(() => {
-                const card = nameElement.closest('.person-card');
-                if (card) {
-                    const personId = card.dataset.personId;
-                    const personName = card.dataset.personName;
-                    openManualAddModal(personId, personName);
-                }
-            }, LONG_PRESS_DURATION);
-        });
-        
-        nameElement.addEventListener('mouseup', function(e) {
-            if (mouseTimer) {
-                clearTimeout(mouseTimer);
-                mouseTimer = null;
-            }
-        });
-        
-        nameElement.addEventListener('mouseleave', function(e) {
-            if (mouseTimer) {
-                clearTimeout(mouseTimer);
-                mouseTimer = null;
-            }
-        });
+        nameElement.addEventListener('click', handlePersonNameClick);
     });
+
+    updateManualAddModeUI();
 });
 
 function restoreSession(card, personId, startTimeStr) {
@@ -225,6 +174,8 @@ function restoreSession(card, personId, startTimeStr) {
 
 function handleCardClick(card, event) {
     event.stopPropagation();
+    if (manualAddModeEnabled) return;
+
     const personId = card.dataset.personId;
     const personName = card.dataset.personName;
     
@@ -237,6 +188,40 @@ function handleCardClick(card, event) {
         // Erster Klick - Karte aktivieren
         startSession(card, personId);
     }
+}
+
+function toggleManualAddMode() {
+    manualAddModeEnabled = !manualAddModeEnabled;
+    updateManualAddModeUI();
+}
+
+function updateManualAddModeUI() {
+    const modeButton = document.getElementById('manualAddModeBtn');
+    if (!modeButton) {
+        return;
+    }
+
+    modeButton.textContent = `Nachtragen-Modus: ${manualAddModeEnabled ? 'EIN' : 'AUS'}`;
+    modeButton.classList.toggle('manual-mode-active', manualAddModeEnabled);
+    document.body.classList.toggle('manual-add-mode', manualAddModeEnabled);
+}
+
+function handlePersonNameClick(event) {
+    if (!manualAddModeEnabled) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const card = event.currentTarget.closest('.person-card');
+    if (!card) {
+        return;
+    }
+
+    const personId = card.dataset.personId;
+    const personName = card.dataset.personName;
+    openManualAddModal(personId, personName);
 }
 
 function startSession(card, personId) {
@@ -611,6 +596,10 @@ document.addEventListener('click', function(event) {
                 closeSessionModal();
             } else if (modal.id === 'addPersonModal') {
                 closeAddPersonModal();
+            } else if (modal.id === 'renamePersonModal' && typeof closeRenamePersonModal === 'function') {
+                closeRenamePersonModal();
+            } else if (modal.id === 'sessionsModal' && typeof closeSessionsModal === 'function') {
+                closeSessionsModal();
             }
         }
     });
