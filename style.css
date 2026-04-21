@@ -94,6 +94,11 @@ header {
     box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
 }
 
+.manual-mode-btn.manual-mode-active:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.6);
+}
+
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -354,7 +359,8 @@ body.manual-add-mode .person-card .person-name {
     transform: translateY(-2px);
 }
 
-#newPersonName {
+#newPersonName,
+#renamePersonName {
     width: 100%;
     padding: 18px;
     font-size: 1.2em;
@@ -367,12 +373,14 @@ body.manual-add-mode .person-card .person-name {
     transition: border-color 0.3s ease;
 }
 
-#newPersonName:focus {
+#newPersonName:focus,
+#renamePersonName:focus {
     border-color: #16a34a;
     background: #252525;
 }
 
-#newPersonName::placeholder {
+#newPersonName::placeholder,
+#renamePersonName::placeholder {
     color: #666;
 }
 

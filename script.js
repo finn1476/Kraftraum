@@ -596,6 +596,10 @@ document.addEventListener('click', function(event) {
                 closeSessionModal();
             } else if (modal.id === 'addPersonModal') {
                 closeAddPersonModal();
+            } else if (modal.id === 'renamePersonModal' && typeof closeRenamePersonModal === 'function') {
+                closeRenamePersonModal();
+            } else if (modal.id === 'sessionsModal' && typeof closeSessionsModal === 'function') {
+                closeSessionsModal();
             }
         }
     });
